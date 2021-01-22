@@ -39,7 +39,7 @@ optional arguments:
 ## Example
 
 ```shell
-$ python backport.py --repo chainer --token abcdefghijklmn --pr 1234
+$ python backport.py --repo chainer --orgn Google --token abcdefghijklmn --pr 1234 --branch BRANCH_NAME
 ```
 
 ## How it works
@@ -58,7 +58,7 @@ If conflict has occurred during backporting, you have to resolve conflict yourse
 and rerun the command with additional `--continue` option.
 
 ```shell
-$ python backport.py --repo chainer --token abcdefghijklmn --pr 1234
+$ python backport.py --repo chainer --orgn Google --token abcdefghijklmn --pr 1234 --branch BRANCH_NAME
 ...
 Cherry-pick failed.
 Working tree is saved at: /tmp/bp-FktJXG5R
@@ -71,5 +71,5 @@ $ <resolve conflict>
 
 $ git cherry-pick --continue
 
-$ python backport.py --repo chainer --token abcdefghijklmn --pr 1234 --continue
+$ python backport.py --repo chainer --orgn Google --token abcdefghijklmn --pr 1234 --branch BRANCH_NAME --continue
 ```
