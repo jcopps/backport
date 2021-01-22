@@ -14,14 +14,16 @@ Script requires authentication to github.com via SSH. [Directions here](https://
 ## Usage
 
 ```
-usage: backport.py [-h] --repo {chainer,cupy} --token TOKEN --pr PR
+usage: backport.py [-h] --repo {REPO_NAME} --orgn {ORGN_NAME} --token TOKEN --pr PR
                    [--branch BRANCH] [--debug] [--continue]
                    [--abort-before-push]
 
 optional arguments:
   -h, --help            show this help message and exit
-  --repo {chainer,cupy}
+  --repo {REPO_NAME}
                         chainer or cupy
+  --orgn {ORGANIZATION_NAME}
+                        Organization name
   --token TOKEN         GitHub access token.
   --pr PR               The original PR number to be backported.
   --branch BRANCH       Target branch to make a backport

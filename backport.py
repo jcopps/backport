@@ -131,20 +131,12 @@ class App(object):
         title = pr.title
 
         pr_issue = self.repo.get_issue(pr_num)
-        labels = set(label.name for label in pr_issue.labels)
-        if 'to-be-backported' not in labels:
-            raise GracefulError(
-                'PR #{} doesn\'t have \'to-be-backported\' label.'.format(
-                    pr_num))
-        labels.remove('to-be-backported')
-        labels.discard('reviewer-team')
-        labels = set(_ for _ in labels if not _.startswith('st:'))
 
         organ_name = self.organ_name
         user_name = self.user_name
         repo_name = self.repo_name
         origin_remote = 'git@github.com:{}/{}'.format(organ_name, repo_name)
-        user_remote = 'git@github.com:{}/{}'.format(user_name, repo_name)
+        user_remote = 'git@github.com:{}/{}'.format(organ_name, repo_name)
         bp_branch_name = 'bp-{}-{}-{}'.format(pr_num,
                                               target_branch, branch_name)
 
@@ -199,14 +191,10 @@ class App(object):
             print("Creating a pull request.")
 
             bp_pr = self.repo.create_pull(
-                title='[backport] {}'.format(title),
-                head='{}:{}'.format(self.user_name, bp_branch_name),
+                title='{} [backport].'.format(title),
+                head='{}:{}'.format(self.organ_name, bp_branch_name),
                 base=target_branch,
                 body='Backport of #{}'.format(pr_num))
-            bp_pr_issue = self.repo.get_issue(bp_pr.number)
-            bp_pr_issue.set_labels('backport', *list(labels))
-            bp_pr_issue.create_comment(
-                '[automatic post] Jenkins, test this please.')
 
         print("Done.")
         print(bp_pr.html_url)
@@ -233,8 +221,11 @@ class App(object):
 def main(args):
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        '--repo', required=True, choices=('chainer', 'cupy'),
-        help='chainer or cupy')
+        '--repo', required=True,
+        help='repo name accessible in your account.')
+    parser.add_argument(
+        '--orgn', required=True,
+        help='Organisation name of the repo.')
     parser.add_argument(
         '--token', type=str, default=None,
         help='GitHub access token.')
@@ -258,12 +249,8 @@ def main(args):
     args = parser.parse_args(args)
 
     target_branch = args.branch
-    if args.repo == 'chainer':
-        organ_name, repo_name = 'chainer', 'chainer'
-    elif args.repo == 'cupy':
-        organ_name, repo_name = 'cupy', 'cupy'
-    else:
-        assert False
+    repo_name = args.repo
+    organ_name = args.orgn
 
     github_token = args.token
     if github_token is None:
