@@ -129,6 +129,7 @@ class App(object):
         merge_commit_sha = pr.merge_commit_sha
         _, branch_name, _ = self.parse_log_message(merge_commit_sha)
         title = pr.title
+        pr_body = pr.body
 
         pr_issue = self.repo.get_issue(pr_num)
 
@@ -191,10 +192,10 @@ class App(object):
             print("Creating a pull request.")
 
             bp_pr = self.repo.create_pull(
-                title='{} [backport].'.format(title),
+                title='{} [backport]'.format(title),
                 head='{}:{}'.format(self.organ_name, bp_branch_name),
                 base=target_branch,
-                body='Backport of #{}'.format(pr_num))
+                body='{}'.format(pr_body))
 
         print("Done.")
         print(bp_pr.html_url)
